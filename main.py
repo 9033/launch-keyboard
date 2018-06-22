@@ -15,6 +15,7 @@ def aaaaa(p,f):
     else:
         return 1
 
+    
 def datawav(wavefname,freq):
     w=wave.open(wavefname,"wb")
     totaltime=0.05 #seconds
@@ -54,6 +55,7 @@ def datawav(wavefname,freq):
     w.writeframes(data)
     w.close()
 
+    
 def chkwav(wavefname):    
     f=open(wavefname,"rb")
     WAV_HEADER_SIZE = struct.calcsize('<4sl4s4slhhllhh4sl')
@@ -81,6 +83,7 @@ def chkwav(wavefname):
     print('getnframes', w.getnframes())
     print('wave bytes', w.getnframes()*w.getnchannels()*w.getsampwidth())
 
+    
 def loadwav(wavefname):    
     d = ds.DirectSoundCreate(None, None)
     d.SetCooperativeLevel(None, ds.DSSCL_PRIORITY)
@@ -104,6 +107,7 @@ def loadwav(wavefname):
     w.close()
     return buffer
 
+
 def playwav(buffer, flag=True):
     if flag:
         event = win32event.CreateEvent(None, 0, 0, None)
@@ -116,9 +120,10 @@ def playwav(buffer, flag=True):
         win32event.WaitForSingleObject(event, -1)
 
         
-        
+import os.path        
 def fileexist(filename):
-    return [False,True][1]
+    return os.path.exists(filename)
+
 
 def genwavfile():
     keycode=0
@@ -130,14 +135,12 @@ def genwavfile():
         datawav("data500.wav",500)
     if not fileexist("data1000.wav"):
         datawav("data1000.wav",1000)
+
         
 #main
-sbuf = {}
+sbuf = {} #soundbuffer list
 def wavemain():
-    #num2byte = lambda fnum:(int(fnum) & 0xffff).to_bytes(2,byteorder='little',signed=True)
-    #print(num2byte(32766))
     genwavfile()
-    #chkwav()
     
     #bind wave to buffer
     sbuf['500']=loadwav("data500.wav")
@@ -150,9 +153,7 @@ def wavemain():
 
     rungui()
 
-    #playwav(buf)
-    #sys.exit()
-
+    
 from tkinter import *
 from tkinter import ttk
 def rungui():
@@ -164,25 +165,18 @@ def rungui():
     var.set('keyboard')
     label.pack()
 
-
     var1 = StringVar()
     label = Message( root, textvariable=var1, width=100, justify=RIGHT,relief=RAISED)
     var1.set("mouse")
     label.pack()
 
-
     def b_callback():
         playwav(sbuf[ '1000' ],False)
-        #print("click")
 
     b = Button(root, text="OK", command=b_callback)
-    #b.bind('<Enter>', print("mouse inside"))
-    #b.bind('<Leave>', print("mouse outside"))
     b.pack()
 
     def key(event):
-        #print ("pressed", repr(event.char))
-        #print ("pressed", event.keycode)
         var.set("keyboard"+" "+ str(event.keycode))
         playwav(sbuf[ event.keycode ],False)
 
@@ -190,18 +184,14 @@ def rungui():
         frame.focus_set()
         var1.set("clicked at"+" "+ str(event.x)+" "+ str(event.y))
         playwav(sbuf[ '500' ],False)
-        #print ("clicked at", event.x, event.y)
 
     frame = Frame(root, width=100, height=100)
     frame.bind("<Key>", key)
     frame.bind("<Button-1>", callback)
     frame.pack()
 
-    #w=Tk.Toplevel()
-    #top.bind('<Enter>', print("mouse inside"))
-    #top.bind('<Leave>', print("mouse inside"))
-    #root.pack()
     root.mainloop()
 
+    
 if __name__=='__main__':
     wavemain()
