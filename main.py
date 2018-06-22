@@ -172,7 +172,7 @@ def rungui():
 
 
     def b_callback():
-        playwav(sbuf[ 'soft-hitwhistle' ],False)
+        playwav(sbuf[ '1000' ],False)
         #print("click")
 
     b = Button(root, text="OK", command=b_callback)
@@ -203,3 +203,5 @@ def rungui():
     #root.pack()
     root.mainloop()
 
+if __name__=='__main__':
+    wavemain()
