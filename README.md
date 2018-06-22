@@ -3,6 +3,7 @@ wave binding keyboard<br>
 
 need pywin32<br>
 
+* function list<br>
 wavemain : main function<br>
 genwavfile : wavefiles generator<br>
 datawav : make sine wave and save wav file.<br>
